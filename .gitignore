@@ -1,0 +1,54 @@
+# DotNet specific
+bin/
+obj/
+*.nuspec
+*.nupkg
+*.snupkg
+project.lock.json
+project.assets.json
+*.dll
+*.exe
+*.pdb
+*.cache
+*.log
+*.csproj.user
+*.suo
+*.user
+*.sln.ide
+
+# Rider / JetBrains
+.idea/
+*.sln.iml
+
+# Visual Studio Code
+.vscode/
+
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Packages
+packages/
+
+# Build artefacts
+*.dll
+*.exe
+*.pdb
+*.appx
+*.appxbundle
+*.msix
+*.msixbundle
+
+# Logs
+logs/
+*.log
+
+# Environment settings
+.env
+.env.local
+.env.*.local
+
+# Resharper
+*.DotSettings.user
