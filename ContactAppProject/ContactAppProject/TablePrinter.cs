@@ -1,4 +1,6 @@
-﻿namespace ContactAppProject;
+﻿using ContactAppProject.models;
+
+namespace ContactAppProject;
 
 using System;
 using System.Collections.Generic;

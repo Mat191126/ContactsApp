@@ -1,4 +1,4 @@
-﻿namespace ContactAppProject;
+﻿namespace ContactAppProject.models;
 
 public class Contact
 {
