@@ -5,8 +5,14 @@ namespace ContactAppProject.services.impl;
 
 public class ContactService : IContactService
 {
+    private IJsonService jsonService;
     private readonly List<Contact> _contacts = new();
-    
+
+    public ContactService(IJsonService jsonService)
+    {
+        this.jsonService = jsonService;
+    }
+
     public void AddNewContact()
     {
         Console.WriteLine("\n=== Add new contact ===");
@@ -17,11 +23,14 @@ public class ContactService : IContactService
         string phoneNumber = ReadValidPhoneNumber("Enter Phone number:");
         
         _contacts.Add(new Contact(firstName, lastName, email, phoneNumber));
+        RefreshContactList();
+        jsonService.SaveToFile(_contacts);
         Console.WriteLine("New contact added");
     }
 
     public void ShowContacts()
     {
+        RefreshContactList();
         Console.WriteLine("\n=== All contacts list ===");
         if (_contacts.Count == 0)
         {
@@ -34,6 +43,7 @@ public class ContactService : IContactService
 
     public void SearchContact()
     {
+        RefreshContactList();
         Console.WriteLine("\n=== Search contacts ===");
         string searchName = ReadNonEmptyInput("Enter first name:");
         
@@ -91,5 +101,10 @@ public class ContactService : IContactService
         }
         
         return phoneNumber;
+    }
+
+    private void RefreshContactList()
+    {
+       _contacts.AddRange(jsonService.ReadFromFile()!);
     }
 }

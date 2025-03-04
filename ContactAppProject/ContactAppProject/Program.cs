@@ -7,7 +7,7 @@ class Program
     private static void Main(string[] args)
     {
         string userInput;
-        IContactService contactService = new ContactService();
+        IContactService contactService = new ContactService(new JsonService());
         Console.WriteLine("< Welcome to the Contact App! >");
         
         do
