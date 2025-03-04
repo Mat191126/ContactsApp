@@ -1,6 +1,4 @@
-﻿using ContactAppProject.models;
-
-namespace ContactAppProject.services;
+﻿namespace ContactAppProject.services;
 
 public interface IContactService
 {

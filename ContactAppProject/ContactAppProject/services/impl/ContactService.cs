@@ -126,7 +126,7 @@ public class ContactService : IContactService
     private string ReadNonEmptyInput(string prompt)
     {
         Console.WriteLine(prompt);
-        string input = Console.ReadLine()?.Trim();
+        string input = Console.ReadLine()?.Trim()!;
 
         if (string.IsNullOrEmpty(input))
         {
@@ -140,7 +140,7 @@ public class ContactService : IContactService
     private string ReadValidEmail(string prompt)
     {
         Console.WriteLine(prompt);
-        string email = Console.ReadLine()?.Trim();
+        string email = Console.ReadLine()?.Trim()!;
         var emailRegex = new Regex(@"^[^@\s]+@[^@\s]+\.[^@\s]+$");
 
         if (string.IsNullOrEmpty(email) || !emailRegex.IsMatch(email))
@@ -155,7 +155,7 @@ public class ContactService : IContactService
     private string ReadValidPhoneNumber(string prompt)
     {
         Console.WriteLine(prompt);
-        string phoneNumber = Console.ReadLine()?.Trim();
+        string phoneNumber = Console.ReadLine()?.Trim()!;
         var phoneRegex = new Regex(@"^\d{9}$");
 
         if (string.IsNullOrEmpty(phoneNumber) || !phoneRegex.IsMatch(phoneNumber))
