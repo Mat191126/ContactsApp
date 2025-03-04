@@ -1,0 +1,10 @@
+﻿using ContactAppProject.models;
+
+namespace ContactAppProject.services;
+
+public interface IContactService
+{
+    void AddNewContact();
+    void ShowContacts();
+    void SearchContact();
+}

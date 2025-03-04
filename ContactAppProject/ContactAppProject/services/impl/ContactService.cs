@@ -1,10 +1,10 @@
 ﻿using ContactAppProject.models;
 
-namespace ContactAppProject.services;
+namespace ContactAppProject.services.impl;
 
-public class ContactService
+public class ContactService : IContactService
 {
-    List<Contact> contacts = new List<Contact>();
+    List<Contact> _contacts = new();
     
     public void AddNewContact()
     {
@@ -17,20 +17,20 @@ public class ContactService
         string email = Console.ReadLine();
         Console.WriteLine("Enter Phone number:");
         string phoneNumber = Console.ReadLine();
-        contacts.Add(new Contact(firstName, lastName, email, phoneNumber));
+        _contacts.Add(new Contact(firstName, lastName, email, phoneNumber));
         Console.WriteLine("New contact added");
     }
 
     public void ShowContacts()
     {
         Console.WriteLine("\n=== All contacts list ===");
-        if (contacts.Count == 0)
+        if (_contacts.Count == 0)
         {
             Console.WriteLine("No contacts found");
             return;
         }
 
-        TablePrinter.PrintContacts(contacts);
+        TablePrinter.PrintContacts(_contacts);
     }
 
     public void SearchContact()
@@ -38,7 +38,7 @@ public class ContactService
         Console.WriteLine("\n=== Search contacts ===");
         Console.WriteLine("Enter first name:");
         string searchName = Console.ReadLine();
-        var foundContact = contacts.FindAll(contact => contact.FirstName.Contains(searchName)).ToList();
+        var foundContact = _contacts.FindAll(contact => contact.FirstName.Contains(searchName)).ToList();
 
         if (foundContact.Count == 0)
         {

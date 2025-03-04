@@ -1,14 +1,15 @@
 ﻿using ContactAppProject.services;
+using ContactAppProject.services.impl;
 
 namespace ContactAppProject;
 class Program
 {
-    static void Main(string[] args)
+    private static void Main(string[] args)
     {
         string userInput;
-        ContactService contactService = new ContactService();
+        IContactService contactService = new ContactService();
         Console.WriteLine("< Welcome to the Contact App! >");
-
+        
         do
         {
             Console.WriteLine("\nEnter option number:");
