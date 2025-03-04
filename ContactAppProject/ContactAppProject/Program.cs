@@ -48,7 +48,7 @@ class Program
                 
             }
             
-        } while (userInput != "4");
+        } while (userInput != "5");
     }
     
     private static void MoveAndClear() {
