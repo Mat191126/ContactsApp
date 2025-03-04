@@ -20,18 +20,22 @@ class Program
             switch (userInput)
             {
                 case "1":
+                    MoveAndClear();
                     AddNewContact(contacts);
                     break;
                 case "2":
+                    MoveAndClear();
                     ShowContacts(contacts);
                     break;
                 case "3":
+                    MoveAndClear();
                     SearchContact(contacts);
                     break;
                 case "4":
                     Console.WriteLine("Exiting...");
                     break;
                 default:
+                    MoveAndClear();
                     Console.WriteLine("Invalid option.");
                     break;
                 
@@ -44,14 +48,14 @@ class Program
     {
         Console.WriteLine("\n=== Add new contact ===");
         Console.WriteLine("Enter first name:");
-        string FirstName = Console.ReadLine();
+        string firstName = Console.ReadLine();
         Console.WriteLine("Enter last name:");
-        string LastName = Console.ReadLine();
+        string lastName = Console.ReadLine();
         Console.WriteLine("Enter email:");
-        string Email = Console.ReadLine();
+        string email = Console.ReadLine();
         Console.WriteLine("Enter Phone number:");
-        string PhoneNumber = Console.ReadLine();
-        contacts.Add(new Contact(FirstName, LastName, Email, PhoneNumber));
+        string phoneNumber = Console.ReadLine();
+        contacts.Add(new Contact(firstName, lastName, email, phoneNumber));
         Console.WriteLine("New contact added");
     }
 
@@ -64,14 +68,28 @@ class Program
             return;
         }
 
-        foreach (var contact in contacts)
-        {
-            Console.WriteLine(contact);
-        }
+        TablePrinter.PrintContacts(contacts);
     }
 
     private static void SearchContact(List<Contact> contacts)
     {
-        
+        Console.WriteLine("\n=== Search contacts ===");
+        Console.WriteLine("Enter first name:");
+        string searchName = Console.ReadLine();
+        var foundContact = contacts.FindAll(contact => contact.FirstName.Contains(searchName)).ToList();
+
+        if (foundContact.Count == 0)
+        {
+            Console.WriteLine("No contacts found");
+            return;
+        }
+
+        Console.WriteLine("\nFound matching contact(s):");
+        TablePrinter.PrintContacts(foundContact);
+    }
+    
+    private static void MoveAndClear() {
+        Console.WriteLine("\n \n \n \n \n \n");
+        Console.Clear();
     }
 }
