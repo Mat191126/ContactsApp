@@ -5,26 +5,26 @@ namespace ContactAppProject.services.impl;
 
 public class ContactService : IContactService
 {
-    private IJsonService jsonService;
+    private readonly IJsonService _jsonService;
     private readonly List<Contact> _contacts = new();
 
     public ContactService(IJsonService jsonService)
     {
-        this.jsonService = jsonService;
+        this._jsonService = jsonService;
     }
 
     public void AddNewContact()
     {
         Console.WriteLine("\n=== Add new contact ===");
-        
+
         string firstName = ReadNonEmptyInput("Enter first name:");
         string lastName = ReadNonEmptyInput("Enter last name:");
         string email = ReadValidEmail("Enter email:");
         string phoneNumber = ReadValidPhoneNumber("Enter Phone number:");
-        
-        _contacts.Add(new Contact(firstName, lastName, email, phoneNumber));
+
         RefreshContactList();
-        jsonService.SaveToFile(_contacts);
+        _contacts.Add(new Contact(firstName, lastName, email, phoneNumber));
+        _jsonService.SaveToFile(_contacts);
         Console.WriteLine("New contact added");
     }
 
@@ -46,8 +46,9 @@ public class ContactService : IContactService
         RefreshContactList();
         Console.WriteLine("\n=== Search contacts ===");
         string searchName = ReadNonEmptyInput("Enter first name:");
-        
-        var foundContact = _contacts.FindAll(contact => contact.FirstName.Contains(searchName, StringComparison.OrdinalIgnoreCase)).ToList();
+
+        var foundContact = _contacts
+            .FindAll(contact => contact.FirstName.Contains(searchName, StringComparison.OrdinalIgnoreCase)).ToList();
 
         if (foundContact.Count == 0)
         {
@@ -59,17 +60,80 @@ public class ContactService : IContactService
         TablePrinter.PrintContacts(foundContact);
     }
 
+    public void RemoveContact()
+    {
+        Console.WriteLine("\n=== Remove contact ===");
+
+        string firstName = ReadNonEmptyInput("Enter first name:");
+        string lastName = ReadNonEmptyInput("Enter last name:");
+
+        var foundContacts = _contacts.Where(contact =>
+            contact.FirstName.Equals(firstName, StringComparison.OrdinalIgnoreCase) &&
+            contact.LastName.Equals(lastName, StringComparison.OrdinalIgnoreCase)
+        ).ToList();
+
+        if (foundContacts.Count == 0)
+        {
+            Console.WriteLine("No contacts found with this name.");
+            return;
+        }
+
+        if (foundContacts.Count == 1)
+        {
+            _contacts.Remove(foundContacts.First());
+            _jsonService.SaveToFile(_contacts);
+            Console.WriteLine("Contact removed successfully.");
+            return;
+        }
+
+        Console.WriteLine("There is more people with this data:");
+        TablePrinter.PrintContacts(foundContacts);
+
+        string additionalData = ReadNonEmptyInput("Enter email or phone number to identify the person:");
+
+        if (additionalData.Contains("@"))
+        {
+            var contactToRemove =
+                foundContacts.FirstOrDefault(c => c.Email.Equals(additionalData, StringComparison.OrdinalIgnoreCase));
+            if (contactToRemove != null)
+            {
+                _contacts.Remove(contactToRemove);
+                _jsonService.SaveToFile(_contacts);
+                Console.WriteLine("Contact removed successfully.");
+            }
+            else
+            {
+                Console.WriteLine("No contact found with the provided email.");
+            }
+        }
+        else
+        {
+            var contactToRemove = foundContacts.FirstOrDefault(c => c.PhoneNumber.Equals(additionalData));
+            if (contactToRemove != null)
+            {
+                _contacts.Remove(contactToRemove);
+                _jsonService.SaveToFile(_contacts);
+                Console.WriteLine("Contact removed successfully.");
+            }
+            else
+            {
+                Console.WriteLine("No contact found with the provided phone number.");
+            }
+        }
+    }
+
+
     private string ReadNonEmptyInput(string prompt)
     {
         Console.WriteLine(prompt);
         string input = Console.ReadLine()?.Trim();
-        
+
         if (string.IsNullOrEmpty(input))
         {
             Console.WriteLine("!!! Improper data");
             return ReadNonEmptyInput(prompt);
         }
-        
+
         return input;
     }
 
@@ -78,13 +142,13 @@ public class ContactService : IContactService
         Console.WriteLine(prompt);
         string email = Console.ReadLine()?.Trim();
         var emailRegex = new Regex(@"^[^@\s]+@[^@\s]+\.[^@\s]+$");
-        
+
         if (string.IsNullOrEmpty(email) || !emailRegex.IsMatch(email))
         {
             Console.WriteLine("!!! Improper email");
             return ReadValidEmail(prompt);
         }
-        
+
         return email;
     }
 
@@ -93,18 +157,19 @@ public class ContactService : IContactService
         Console.WriteLine(prompt);
         string phoneNumber = Console.ReadLine()?.Trim();
         var phoneRegex = new Regex(@"^\d{9}$");
-        
+
         if (string.IsNullOrEmpty(phoneNumber) || !phoneRegex.IsMatch(phoneNumber))
         {
             Console.WriteLine("!!! Improper phone number");
             return ReadValidPhoneNumber(prompt);
         }
-        
+
         return phoneNumber;
     }
 
     private void RefreshContactList()
     {
-       _contacts.AddRange(jsonService.ReadFromFile()!);
+        _contacts.Clear();
+        _contacts.AddRange(_jsonService.ReadFromFile()!);
     }
 }
